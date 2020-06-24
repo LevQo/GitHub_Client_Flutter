@@ -1,7 +1,8 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:github_client_flutter/core/network/network_info.dart';
-import 'package:github_client_flutter/features/public_repositories/data/data_sources/github_repository_remote_data_source.dart';
+import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_local_data_source.dart';
+import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/repositories/public_github_repos_repository_impl.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/repositories/public_github_repos_repository.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/use_cases/get_public_github_repositories.dart';
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 final GetIt sl = GetIt.instance;
 
-void init() {
+Future init() async {
   // Core
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
@@ -21,20 +22,24 @@ void init() {
   sl.registerFactory(
       () => PublicGithubRepositoriesBloc(getAllGitHubRepositories: sl()));
 
-  //Use Cases
+  // Use Cases
   sl.registerLazySingleton(() => GetPublicGitHubRepositories(sl(),));
 
-  //Repository
+  // Repository
   sl.registerLazySingleton<PublicGitHubReposRepository>(
       () => (PublicGitHubReposRepositoryImpl(
             remoteDataSource: sl(),
-            localDataSource: null,
+            localDataSource: sl(),
             networkInfo: sl(),
           )));
 
-  //Data Sources
+  // Remote Data Sources
   sl.registerLazySingleton<PublicGitHubRepositoriesRemoteDataSource>(
       () => PublicGitHubRepositoriesRemoteDataSourceImpl(
             client: sl(),
           ));
+
+  // Local Data Sources
+  sl.registerLazySingleton<PublicGitHubRepositoriesLocalDataSource>(
+          () => PublicGitHubRepositoriesLocalDataSourceImpl());
 }

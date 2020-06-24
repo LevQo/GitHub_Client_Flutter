@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
@@ -20,16 +21,24 @@ class PublicGitHubRepositoriesRemoteDataSourceImpl
   @override
   Future<List<GitHubRepositoryModel>> getPublicGitHubRepositories(
       int lastRepoId) async {
-    final response = await client.get(
-        'https://api.github.com/repositories?since=$lastRepoId',
-        headers: {HttpHeaders.contentTypeHeader: 'application/json'});
-
-    if (response.statusCode == 200) {
-      return (json.decode(response.body) as List)
+    try {
+      final dio = Dio();
+      dio.interceptors.add(LogInterceptor(responseBody: true));
+      final response = await dio.get(
+          'https://api.github.com/repositories?since=$lastRepoId');
+      return (response.data as List)
           .map((i) => GitHubRepositoryModel.fromJson(i))
           .toList();
-    } else {
+    } on DioError catch(e){
       throw ServerException();
     }
+//    if (response.statusCode == 200) {
+//      return (json.decode(response.body) as List)
+//          .map((i) => GitHubRepositoryModel.fromJson(i))
+//          .toList();
+//    } else {
+//
+//      throw ServerException();
+//    }
   }
 }

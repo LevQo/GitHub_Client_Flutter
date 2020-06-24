@@ -9,23 +9,38 @@ class AllPublicRepositoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PublicGithubRepositoriesBloc>(
-      create: (context) => sl<PublicGithubRepositoriesBloc>()
+      create: (context) =>
+      sl<PublicGithubRepositoriesBloc>()
         ..add(GetPublicGitHubRepositoriesEvent(0)),
       child: BlocBuilder<PublicGithubRepositoriesBloc,
           PublicGithubRepositoriesState>(
         builder: (context, state) {
-          if (state is LoadedState) {
-            return ListView.builder(
-                itemCount: state.repositories.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.blue,
-                    child: Center(child: Text(state.repositories[index].name)),
-                  );
-                });
-          } else {
-            return Container();
-          }
+          return state.when(
+              initial: () => Container(),
+              loading: () => Container(),
+              loaded: (repositories) =>
+                  ListView.builder(
+                      itemCount: repositories.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          color: Colors.blue,
+                          child: Center(child: Text(repositories[index].name)),
+                        );
+                      }),
+              error: (message) => Container());
+
+//          if (state is PublicGithubRepositoriesState.) {
+//            return ListView.builder(
+//                itemCount: state.repositories.length,
+//                itemBuilder: (context, index) {
+//                  return Container(
+//                    color: Colors.blue,
+//                    child: Center(child: Text(state.repositories[index].name)),
+//                  );
+//                });
+//          } else {
+//            return Container();
+//          }
         },
       ),
     );

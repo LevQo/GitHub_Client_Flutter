@@ -1,13 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:github_client_flutter/core/constants/db_boxes.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:github_client_flutter/core/errors/failures.dart';
 import 'package:github_client_flutter/core/network/network_info.dart';
-import 'package:github_client_flutter/features/public_repositories/data/data_sources/github_repository_local_data_source.dart';
-import 'package:github_client_flutter/features/public_repositories/data/data_sources/github_repository_remote_data_source.dart';
+import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_local_data_source.dart';
+import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/repositories/public_github_repos_repository_impl.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
+import 'package:hive/hive.dart';
 import 'package:mockito/mockito.dart';
 
 class MockRemoteDataSource extends Mock
@@ -18,12 +20,11 @@ class MockLocalDataSource extends Mock
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
-void main() {
+void main() async {
   PublicGitHubReposRepositoryImpl repository;
   MockRemoteDataSource mockRemoteDataSource;
   MockLocalDataSource mockLocalDataSource;
   MockNetworkInfo mockNetworkInfo;
-
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockLocalDataSource = MockLocalDataSource();
@@ -56,7 +57,7 @@ void main() {
   group('get all public GitHub repositories', () {
     final tGitHubRepositoryModel = GitHubRepositoryModel(
         id: 0, name: 'name', description: 'description', url: 'url');
-    final List<GitHubRepositoryEntity> tGitHubRepositoriesList = [
+    final List<GitHubRepositoryModel> tGitHubRepositoriesList = [
       tGitHubRepositoryModel
     ];
 
@@ -77,10 +78,10 @@ void main() {
         when(mockRemoteDataSource.getPublicGitHubRepositories(any))
             .thenAnswer((_) async => tGitHubRepositoriesList);
         //act
-        await repository.getPublicGitHubRepositories(100);
+        final result = await repository.getPublicGitHubRepositories(100);
         //assert
         verify(mockRemoteDataSource.getPublicGitHubRepositories(100));
-        verify(mockLocalDataSource.getPublicGitHubRepositoriesFromCache());
+        verify(mockLocalDataSource.savePublicGitHubRepositoriesToCache(any));
       });
 
       test(
@@ -100,7 +101,7 @@ void main() {
     runTestsOffline(() {
       test('should return last loaded list of repositories from cache',
           () async {
-        //TODO
+
       });
     });
   });

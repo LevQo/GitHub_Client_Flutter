@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
-import 'package:github_client_flutter/features/public_repositories/data/data_sources/github_repository_remote_data_source.dart';
+import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';

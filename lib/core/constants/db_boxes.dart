@@ -1,0 +1,1 @@
+const String kPublicRepositoriesBoxName = 'public_repositories';
