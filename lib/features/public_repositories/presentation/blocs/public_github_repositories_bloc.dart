@@ -40,7 +40,7 @@ class PublicGithubRepositoriesBloc
             (repositories) {
       _lastRepoId = repositories.last.id;
       final resultRepositories = _currentRepositories..addAll(repositories);
-      return  PublicGithubRepositoriesState.loaded(repositories: resultRepositories);
+      return PublicGithubRepositoriesState.loaded(repositories: resultRepositories);
     });
   }
 }

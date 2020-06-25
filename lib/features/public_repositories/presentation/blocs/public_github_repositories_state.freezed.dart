@@ -345,11 +345,7 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is _Loaded &&
-            (identical(other.repositories, repositories) ||
-                const DeepCollectionEquality()
-                    .equals(other.repositories, repositories)));
+    return identical(this, other); //TODO: crutch for double call bloc state
   }
 
   @override

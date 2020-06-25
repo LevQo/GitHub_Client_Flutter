@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -6,8 +7,7 @@ import 'package:github_client_flutter/features/public_repositories/domain/entiti
 part 'public_github_repositories_state.freezed.dart';
 
 @freezed
-abstract class PublicGithubRepositoriesState
-    with _$PublicGithubRepositoriesState {
+abstract class PublicGithubRepositoriesState with _$PublicGithubRepositoriesState {
   const factory PublicGithubRepositoriesState.initial() = _Initial;
 
   const factory PublicGithubRepositoriesState.loading() = _Loading;

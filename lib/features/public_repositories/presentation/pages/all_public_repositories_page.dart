@@ -22,28 +22,35 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
       child: BlocBuilder<PublicGithubRepositoriesBloc,
           PublicGithubRepositoriesState>(
         builder: (context, state) {
-          return state.when(
+          return state.maybeWhen(
               initial: () => Container(),
               loading: () => Container(),
               loaded: (repositories) =>
                   NotificationListener<ScrollNotification>(
                     onNotification: (scrollNotification) =>
                         _handleScrollNotification(scrollNotification, context),
-                    child: ListView.builder(
-                        itemCount: repositories.length,
-                        controller: _scrollController,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            color: Colors.blue,
-                            child: Center(
-                              child: Text(
-                                repositories[index].id.toString(),
+                    child: GestureDetector(
+                      onTap: () {
+                        context.bloc<PublicGithubRepositoriesBloc>().add(
+                            PublicGithubRepositoriesEvent.getRepositories());
+                      },
+                      child: ListView.builder(
+                          itemCount: repositories.length,
+                          controller: _scrollController,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              color: Colors.blue,
+                              child: Center(
+                                child: Text(
+                                  repositories[index].id.toString(),
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          }),
+                    ),
                   ),
-              error: (message) => Container());
+              error: (message) => Container(),
+              orElse: () => Container());
         },
       ),
     );
