@@ -20,7 +20,7 @@ class _$PublicGithubRepositoriesStateTearOff {
     return const _Loading();
   }
 
-  _Loaded loaded({List<GitHubRepositoryEntity> repositories}) {
+  _Loaded loaded({@required List<GitHubRepositoryEntity> repositories}) {
     return _Loaded(
       repositories: repositories,
     );
@@ -325,7 +325,7 @@ class __$LoadedCopyWithImpl<$Res>
 }
 
 class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
-  const _$_Loaded({this.repositories});
+  const _$_Loaded({@required this.repositories}) : assert(repositories != null);
 
   @override
   final List<GitHubRepositoryEntity> repositories;
@@ -424,7 +424,7 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
 }
 
 abstract class _Loaded implements PublicGithubRepositoriesState {
-  const factory _Loaded({List<GitHubRepositoryEntity> repositories}) =
+  const factory _Loaded({@required List<GitHubRepositoryEntity> repositories}) =
       _$_Loaded;
 
   List<GitHubRepositoryEntity> get repositories;

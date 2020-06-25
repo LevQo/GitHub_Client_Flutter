@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
@@ -9,24 +10,24 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
-class MockHttpClient extends Mock implements http.Client {}
+class MockDio extends Mock implements Dio {}
 
 void main() {
   PublicGitHubRepositoriesRemoteDataSourceImpl dataSource;
-  MockHttpClient mockHttpClient;
+  MockDio mockDioClient;
 
   setUp(() {
-    mockHttpClient = MockHttpClient();
-    dataSource = PublicGitHubRepositoriesRemoteDataSourceImpl(client: mockHttpClient);
+    mockDioClient = MockDio();
+    dataSource = PublicGitHubRepositoriesRemoteDataSourceImpl(client: mockDioClient);
   });
   
   void setUpMockHttpClientSuccess200(){
-    when(mockHttpClient.get(any, headers: anyNamed('headers'))).thenAnswer(
+    when(mockDioClient.get(any).thenAnswer(
             (_) async => http.Response(fixture('public_repositories.json'), 200));
   }
 
   void setUpMockHttpClientFailure404(){
-    when(mockHttpClient.get(any, headers: anyNamed('headers')))
+    when(mockDioClient.get(any, headers: anyNamed('headers')))
         .thenAnswer((_) async => http.Response('Something went wrong', 404));
   }
 
@@ -42,7 +43,7 @@ void main() {
       // act
       dataSource.getPublicGitHubRepositories(tLastRepoId);
       // assert
-      verify(mockHttpClient
+      verify(mockDioClient
           .get('https://api.github.com/repositories/$tLastRepoId', headers: {
         'Content-Type': 'application/json',
       }));

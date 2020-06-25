@@ -5,13 +5,20 @@ import 'package:github_client_flutter/features/public_repositories/presentation/
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_event.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_state.dart';
 
-class AllPublicRepositoriesPage extends StatelessWidget {
+class AllPublicRepositoriesPage extends StatefulWidget {
+  @override
+  _AllPublicRepositoriesPageState createState() =>
+      _AllPublicRepositoriesPageState();
+}
+
+class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
+  final _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PublicGithubRepositoriesBloc>(
-      create: (context) =>
-      sl<PublicGithubRepositoriesBloc>()
-        ..add(GetPublicGitHubRepositoriesEvent(0)),
+      create: (context) => sl<PublicGithubRepositoriesBloc>()
+        ..add(PublicGithubRepositoriesEvent.getRepositories()),
       child: BlocBuilder<PublicGithubRepositoriesBloc,
           PublicGithubRepositoriesState>(
         builder: (context, state) {
@@ -19,30 +26,37 @@ class AllPublicRepositoriesPage extends StatelessWidget {
               initial: () => Container(),
               loading: () => Container(),
               loaded: (repositories) =>
-                  ListView.builder(
-                      itemCount: repositories.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          color: Colors.blue,
-                          child: Center(child: Text(repositories[index].name)),
-                        );
-                      }),
+                  NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) =>
+                        _handleScrollNotification(scrollNotification, context),
+                    child: ListView.builder(
+                        itemCount: repositories.length,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            color: Colors.blue,
+                            child: Center(
+                              child: Text(
+                                repositories[index].id.toString(),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
               error: (message) => Container());
-
-//          if (state is PublicGithubRepositoriesState.) {
-//            return ListView.builder(
-//                itemCount: state.repositories.length,
-//                itemBuilder: (context, index) {
-//                  return Container(
-//                    color: Colors.blue,
-//                    child: Center(child: Text(state.repositories[index].name)),
-//                  );
-//                });
-//          } else {
-//            return Container();
-//          }
         },
       ),
     );
+  }
+
+  bool _handleScrollNotification(
+      ScrollNotification notification, BuildContext context) {
+    if (notification is ScrollEndNotification &&
+        _scrollController.position.extentAfter == 0) {
+      context
+          .bloc<PublicGithubRepositoriesBloc>()
+          .add(PublicGithubRepositoriesEvent.getRepositories());
+    }
+    return false;
   }
 }

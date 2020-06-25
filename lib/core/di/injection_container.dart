@@ -8,38 +8,43 @@ import 'package:github_client_flutter/features/public_repositories/domain/reposi
 import 'package:github_client_flutter/features/public_repositories/domain/use_cases/get_public_github_repositories.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:injectable/injectable.dart';
+import 'package:github_client_flutter/core/di/injection_container.iconfig.dart';
 
 final GetIt sl = GetIt.instance;
 
-Future init() async {
-  // Core
-  sl.registerLazySingleton(() => http.Client());
-  sl.registerLazySingleton(() => DataConnectionChecker());
-  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+@injectableInit
+void configureDependencies() => $initGetIt(sl);
 
-  // Features - All public GitHub repositories
-  // Bloc
-  sl.registerFactory(
-      () => PublicGithubRepositoriesBloc(getAllGitHubRepositories: sl()));
-
-  // Use Cases
-  sl.registerLazySingleton(() => GetPublicGitHubRepositories(sl(),));
-
-  // Repository
-  sl.registerLazySingleton<PublicGitHubReposRepository>(
-      () => (PublicGitHubReposRepositoryImpl(
-            remoteDataSource: sl(),
-            localDataSource: sl(),
-            networkInfo: sl(),
-          )));
-
-  // Remote Data Sources
-  sl.registerLazySingleton<PublicGitHubRepositoriesRemoteDataSource>(
-      () => PublicGitHubRepositoriesRemoteDataSourceImpl(
-            client: sl(),
-          ));
-
-  // Local Data Sources
-  sl.registerLazySingleton<PublicGitHubRepositoriesLocalDataSource>(
-          () => PublicGitHubRepositoriesLocalDataSourceImpl());
-}
+//Future init() async {
+//  // Core
+//  sl.registerLazySingleton(() => http.Client());
+//  sl.registerLazySingleton(() => DataConnectionChecker());
+//  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+//
+//  // Features - All public GitHub repositories
+//  // Bloc
+//  sl.registerFactory(
+//      () => PublicGithubRepositoriesBloc(getAllGitHubRepositories: sl()));
+//
+//  // Use Cases
+//  sl.registerLazySingleton(() => GetPublicGitHubRepositories(sl(),));
+//
+//  // Repository
+//  sl.registerLazySingleton<PublicGitHubReposRepository>(
+//      () => (PublicGitHubReposRepositoryImpl(
+//            remoteDataSource: sl(),
+//            localDataSource: sl(),
+//            networkInfo: sl(),
+//          )));
+//
+//  // Remote Data Sources
+//  sl.registerLazySingleton<PublicGitHubRepositoriesRemoteDataSource>(
+//      () => PublicGitHubRepositoriesRemoteDataSourceImpl(
+//            client: sl(),
+//          ));
+//
+//  // Local Data Sources
+//  sl.registerLazySingleton<PublicGitHubRepositoriesLocalDataSource>(
+//          () => PublicGitHubRepositoriesLocalDataSourceImpl());
+//}

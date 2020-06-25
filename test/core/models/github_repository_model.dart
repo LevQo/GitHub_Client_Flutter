@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 
-import '../../../../fixtures/fixture_reader.dart';
+import '../../fixtures/fixture_reader.dart';
+
 
 void main() {
   final tGitHubRepositoryModel = GitHubRepositoryModel(

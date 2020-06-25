@@ -2,6 +2,7 @@ import 'package:github_client_flutter/core/constants/db_boxes.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class PublicGitHubRepositoriesLocalDataSource {
   Future savePublicGitHubRepositoriesToCache(
@@ -10,6 +11,7 @@ abstract class PublicGitHubRepositoriesLocalDataSource {
   Future<List<GitHubRepositoryModel>> getPublicGitHubRepositoriesFromCache();
 }
 
+@LazySingleton(as: PublicGitHubRepositoriesLocalDataSource)
 class PublicGitHubRepositoriesLocalDataSourceImpl
     implements PublicGitHubRepositoriesLocalDataSource {
   @override

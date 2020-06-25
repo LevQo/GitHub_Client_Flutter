@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:github_client_flutter/core/constants/db_boxes.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart' as di;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:github_client_flutter/features/public_repositories/presentation/pages/all_public_repositories_page.dart';
@@ -8,7 +7,7 @@ import 'package:hive/hive.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
+  di.configureDependencies();
   await _initHive();
   runApp(MyApp());
 }
@@ -20,7 +19,6 @@ Future _initHive() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

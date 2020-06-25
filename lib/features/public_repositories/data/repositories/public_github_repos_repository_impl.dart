@@ -7,7 +7,9 @@ import 'package:github_client_flutter/features/public_repositories/data/data_sou
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/repositories/public_github_repos_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: PublicGitHubReposRepository)
 class PublicGitHubReposRepositoryImpl implements PublicGitHubReposRepository {
   final PublicGitHubRepositoriesRemoteDataSource remoteDataSource;
   final PublicGitHubRepositoriesLocalDataSource localDataSource;
@@ -23,7 +25,7 @@ class PublicGitHubReposRepositoryImpl implements PublicGitHubReposRepository {
       getPublicGitHubRepositories(int lastRepoId) async {
     if (await networkInfo.isConnected) {
       try {
-        final repositories = await remoteDataSource.getPublicGitHubRepositories(100);
+        final repositories = await remoteDataSource.getPublicGitHubRepositories(lastRepoId);
         localDataSource.savePublicGitHubRepositoriesToCache(repositories);
         return Right(repositories);
       } on ServerException {
