@@ -28,8 +28,8 @@ class PublicGitHubReposRepositoryImpl implements PublicGitHubReposRepository {
         final repositories = await remoteDataSource.getPublicGitHubRepositories(lastRepoId);
         localDataSource.savePublicGitHubRepositoriesToCache(repositories);
         return Right(repositories);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e){
+        return Left(ServerFailure(message: e.message));
       }
     } else {
       try {

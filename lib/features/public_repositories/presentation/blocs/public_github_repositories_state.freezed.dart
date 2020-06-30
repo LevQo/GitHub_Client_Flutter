@@ -20,8 +20,15 @@ class _$PublicGithubRepositoriesStateTearOff {
     return const _Loading();
   }
 
-  _Loaded loaded({@required List<GitHubRepositoryEntity> repositories}) {
-    return _Loaded(
+  _LoadingNextPage loadingNextPage(
+      {@required List<GitHubRepositoryEntity> currentRepositories}) {
+    return _LoadingNextPage(
+      currentRepositories: currentRepositories,
+    );
+  }
+
+  Loaded loaded({@required List<GitHubRepositoryEntity> repositories}) {
+    return Loaded(
       repositories: repositories,
     );
   }
@@ -41,6 +48,9 @@ mixin _$PublicGithubRepositoriesState {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
     @required Result loaded(List<GitHubRepositoryEntity> repositories),
     @required Result error(String message),
   });
@@ -48,6 +58,7 @@ mixin _$PublicGithubRepositoriesState {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
     Result loaded(List<GitHubRepositoryEntity> repositories),
     Result error(String message),
     @required Result orElse(),
@@ -56,14 +67,16 @@ mixin _$PublicGithubRepositoriesState {
   Result map<Result extends Object>({
     @required Result initial(_Initial value),
     @required Result loading(_Loading value),
-    @required Result loaded(_Loaded value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
     @required Result error(_Error value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result initial(_Initial value),
     Result loading(_Loading value),
-    Result loaded(_Loaded value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
     Result error(_Error value),
     @required Result orElse(),
   });
@@ -129,11 +142,15 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
     @required Result loaded(List<GitHubRepositoryEntity> repositories),
     @required Result error(String message),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return initial();
@@ -144,6 +161,7 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
     Result loaded(List<GitHubRepositoryEntity> repositories),
     Result error(String message),
     @required Result orElse(),
@@ -160,11 +178,13 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
   Result map<Result extends Object>({
     @required Result initial(_Initial value),
     @required Result loading(_Loading value),
-    @required Result loaded(_Loaded value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
     @required Result error(_Error value),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return initial(this);
@@ -175,7 +195,8 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
   Result maybeMap<Result extends Object>({
     Result initial(_Initial value),
     Result loading(_Loading value),
-    Result loaded(_Loaded value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
     Result error(_Error value),
     @required Result orElse(),
   }) {
@@ -235,11 +256,15 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
     @required Result loaded(List<GitHubRepositoryEntity> repositories),
     @required Result error(String message),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return loading();
@@ -250,6 +275,7 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
     Result loaded(List<GitHubRepositoryEntity> repositories),
     Result error(String message),
     @required Result orElse(),
@@ -266,11 +292,13 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
   Result map<Result extends Object>({
     @required Result initial(_Initial value),
     @required Result loading(_Loading value),
-    @required Result loaded(_Loaded value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
     @required Result error(_Error value),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return loading(this);
@@ -281,7 +309,8 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
   Result maybeMap<Result extends Object>({
     Result initial(_Initial value),
     Result loading(_Loading value),
-    Result loaded(_Loaded value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
     Result error(_Error value),
     @required Result orElse(),
   }) {
@@ -297,26 +326,176 @@ abstract class _Loading implements PublicGithubRepositoriesState {
   const factory _Loading() = _$_Loading;
 }
 
-abstract class _$LoadedCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) then) =
-      __$LoadedCopyWithImpl<$Res>;
+abstract class _$LoadingNextPageCopyWith<$Res> {
+  factory _$LoadingNextPageCopyWith(
+          _LoadingNextPage value, $Res Function(_LoadingNextPage) then) =
+      __$LoadingNextPageCopyWithImpl<$Res>;
+  $Res call({List<GitHubRepositoryEntity> currentRepositories});
+}
+
+class __$LoadingNextPageCopyWithImpl<$Res>
+    extends _$PublicGithubRepositoriesStateCopyWithImpl<$Res>
+    implements _$LoadingNextPageCopyWith<$Res> {
+  __$LoadingNextPageCopyWithImpl(
+      _LoadingNextPage _value, $Res Function(_LoadingNextPage) _then)
+      : super(_value, (v) => _then(v as _LoadingNextPage));
+
+  @override
+  _LoadingNextPage get _value => super._value as _LoadingNextPage;
+
+  @override
+  $Res call({
+    Object currentRepositories = freezed,
+  }) {
+    return _then(_LoadingNextPage(
+      currentRepositories: currentRepositories == freezed
+          ? _value.currentRepositories
+          : currentRepositories as List<GitHubRepositoryEntity>,
+    ));
+  }
+}
+
+class _$_LoadingNextPage
+    with DiagnosticableTreeMixin
+    implements _LoadingNextPage {
+  const _$_LoadingNextPage({@required this.currentRepositories})
+      : assert(currentRepositories != null);
+
+  @override
+  final List<GitHubRepositoryEntity> currentRepositories;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'PublicGithubRepositoriesState.loadingNextPage(currentRepositories: $currentRepositories)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'PublicGithubRepositoriesState.loadingNextPage'))
+      ..add(DiagnosticsProperty('currentRepositories', currentRepositories));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _LoadingNextPage &&
+            (identical(other.currentRepositories, currentRepositories) ||
+                const DeepCollectionEquality()
+                    .equals(other.currentRepositories, currentRepositories)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(currentRepositories);
+
+  @override
+  _$LoadingNextPageCopyWith<_LoadingNextPage> get copyWith =>
+      __$LoadingNextPageCopyWithImpl<_LoadingNextPage>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result initial(),
+    @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
+    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required Result error(String message),
+  }) {
+    assert(initial != null);
+    assert(loading != null);
+    assert(loadingNextPage != null);
+    assert(loaded != null);
+    assert(error != null);
+    return loadingNextPage(currentRepositories);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result initial(),
+    Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result error(String message),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (loadingNextPage != null) {
+      return loadingNextPage(currentRepositories);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result initial(_Initial value),
+    @required Result loading(_Loading value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
+    @required Result error(_Error value),
+  }) {
+    assert(initial != null);
+    assert(loading != null);
+    assert(loadingNextPage != null);
+    assert(loaded != null);
+    assert(error != null);
+    return loadingNextPage(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result initial(_Initial value),
+    Result loading(_Loading value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
+    Result error(_Error value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (loadingNextPage != null) {
+      return loadingNextPage(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoadingNextPage implements PublicGithubRepositoriesState {
+  const factory _LoadingNextPage(
+          {@required List<GitHubRepositoryEntity> currentRepositories}) =
+      _$_LoadingNextPage;
+
+  List<GitHubRepositoryEntity> get currentRepositories;
+  _$LoadingNextPageCopyWith<_LoadingNextPage> get copyWith;
+}
+
+abstract class $LoadedCopyWith<$Res> {
+  factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) then) =
+      _$LoadedCopyWithImpl<$Res>;
   $Res call({List<GitHubRepositoryEntity> repositories});
 }
 
-class __$LoadedCopyWithImpl<$Res>
+class _$LoadedCopyWithImpl<$Res>
     extends _$PublicGithubRepositoriesStateCopyWithImpl<$Res>
-    implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(_Loaded _value, $Res Function(_Loaded) _then)
-      : super(_value, (v) => _then(v as _Loaded));
+    implements $LoadedCopyWith<$Res> {
+  _$LoadedCopyWithImpl(Loaded _value, $Res Function(Loaded) _then)
+      : super(_value, (v) => _then(v as Loaded));
 
   @override
-  _Loaded get _value => super._value as _Loaded;
+  Loaded get _value => super._value as Loaded;
 
   @override
   $Res call({
     Object repositories = freezed,
   }) {
-    return _then(_Loaded(
+    return _then(Loaded(
       repositories: repositories == freezed
           ? _value.repositories
           : repositories as List<GitHubRepositoryEntity>,
@@ -324,8 +503,8 @@ class __$LoadedCopyWithImpl<$Res>
   }
 }
 
-class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
-  const _$_Loaded({@required this.repositories}) : assert(repositories != null);
+class _$Loaded with DiagnosticableTreeMixin implements Loaded {
+  const _$Loaded({@required this.repositories}) : assert(repositories != null);
 
   @override
   final List<GitHubRepositoryEntity> repositories;
@@ -345,7 +524,11 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other); //TODO: crutch for double call bloc state
+    return identical(this, other) ||
+        (other is Loaded &&
+            (identical(other.repositories, repositories) ||
+                const DeepCollectionEquality()
+                    .equals(other.repositories, repositories)));
   }
 
   @override
@@ -353,19 +536,23 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
       runtimeType.hashCode ^ const DeepCollectionEquality().hash(repositories);
 
   @override
-  _$LoadedCopyWith<_Loaded> get copyWith =>
-      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+  $LoadedCopyWith<Loaded> get copyWith =>
+      _$LoadedCopyWithImpl<Loaded>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
     @required Result loaded(List<GitHubRepositoryEntity> repositories),
     @required Result error(String message),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return loaded(repositories);
@@ -376,6 +563,7 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
     Result loaded(List<GitHubRepositoryEntity> repositories),
     Result error(String message),
     @required Result orElse(),
@@ -392,11 +580,13 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
   Result map<Result extends Object>({
     @required Result initial(_Initial value),
     @required Result loading(_Loading value),
-    @required Result loaded(_Loaded value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
     @required Result error(_Error value),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return loaded(this);
@@ -407,7 +597,8 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
   Result maybeMap<Result extends Object>({
     Result initial(_Initial value),
     Result loading(_Loading value),
-    Result loaded(_Loaded value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
     Result error(_Error value),
     @required Result orElse(),
   }) {
@@ -419,12 +610,12 @@ class _$_Loaded with DiagnosticableTreeMixin implements _Loaded {
   }
 }
 
-abstract class _Loaded implements PublicGithubRepositoriesState {
-  const factory _Loaded({@required List<GitHubRepositoryEntity> repositories}) =
-      _$_Loaded;
+abstract class Loaded implements PublicGithubRepositoriesState {
+  const factory Loaded({@required List<GitHubRepositoryEntity> repositories}) =
+      _$Loaded;
 
   List<GitHubRepositoryEntity> get repositories;
-  _$LoadedCopyWith<_Loaded> get copyWith;
+  $LoadedCopyWith<Loaded> get copyWith;
 }
 
 abstract class _$ErrorCopyWith<$Res> {
@@ -492,11 +683,15 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result loading(),
+    @required
+        Result loadingNextPage(
+            List<GitHubRepositoryEntity> currentRepositories),
     @required Result loaded(List<GitHubRepositoryEntity> repositories),
     @required Result error(String message),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return error(message);
@@ -507,6 +702,7 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result loading(),
+    Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
     Result loaded(List<GitHubRepositoryEntity> repositories),
     Result error(String message),
     @required Result orElse(),
@@ -523,11 +719,13 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
   Result map<Result extends Object>({
     @required Result initial(_Initial value),
     @required Result loading(_Loading value),
-    @required Result loaded(_Loaded value),
+    @required Result loadingNextPage(_LoadingNextPage value),
+    @required Result loaded(Loaded value),
     @required Result error(_Error value),
   }) {
     assert(initial != null);
     assert(loading != null);
+    assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
     return error(this);
@@ -538,7 +736,8 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
   Result maybeMap<Result extends Object>({
     Result initial(_Initial value),
     Result loading(_Loading value),
-    Result loaded(_Loaded value),
+    Result loadingNextPage(_LoadingNextPage value),
+    Result loaded(Loaded value),
     Result error(_Error value),
     @required Result orElse(),
   }) {

@@ -12,8 +12,10 @@ T _$identity<T>(T value) => value;
 class _$PublicGithubRepositoriesEventTearOff {
   const _$PublicGithubRepositoriesEventTearOff();
 
-  _GetRepositories getRepositories() {
-    return const _GetRepositories();
+  _GetRepositories getRepositories({bool isRefresh}) {
+    return _GetRepositories(
+      isRefresh: isRefresh,
+    );
   }
 }
 
@@ -21,13 +23,15 @@ class _$PublicGithubRepositoriesEventTearOff {
 const $PublicGithubRepositoriesEvent = _$PublicGithubRepositoriesEventTearOff();
 
 mixin _$PublicGithubRepositoriesEvent {
+  bool get isRefresh;
+
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result getRepositories(),
+    @required Result getRepositories(bool isRefresh),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result getRepositories(),
+    Result getRepositories(bool isRefresh),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -39,6 +43,9 @@ mixin _$PublicGithubRepositoriesEvent {
     Result getRepositories(_GetRepositories value),
     @required Result orElse(),
   });
+
+  $PublicGithubRepositoriesEventCopyWith<PublicGithubRepositoriesEvent>
+      get copyWith;
 }
 
 abstract class $PublicGithubRepositoriesEventCopyWith<$Res> {
@@ -46,6 +53,7 @@ abstract class $PublicGithubRepositoriesEventCopyWith<$Res> {
           PublicGithubRepositoriesEvent value,
           $Res Function(PublicGithubRepositoriesEvent) then) =
       _$PublicGithubRepositoriesEventCopyWithImpl<$Res>;
+  $Res call({bool isRefresh});
 }
 
 class _$PublicGithubRepositoriesEventCopyWithImpl<$Res>
@@ -55,12 +63,24 @@ class _$PublicGithubRepositoriesEventCopyWithImpl<$Res>
   final PublicGithubRepositoriesEvent _value;
   // ignore: unused_field
   final $Res Function(PublicGithubRepositoriesEvent) _then;
+
+  @override
+  $Res call({
+    Object isRefresh = freezed,
+  }) {
+    return _then(_value.copyWith(
+      isRefresh: isRefresh == freezed ? _value.isRefresh : isRefresh as bool,
+    ));
+  }
 }
 
-abstract class _$GetRepositoriesCopyWith<$Res> {
+abstract class _$GetRepositoriesCopyWith<$Res>
+    implements $PublicGithubRepositoriesEventCopyWith<$Res> {
   factory _$GetRepositoriesCopyWith(
           _GetRepositories value, $Res Function(_GetRepositories) then) =
       __$GetRepositoriesCopyWithImpl<$Res>;
+  @override
+  $Res call({bool isRefresh});
 }
 
 class __$GetRepositoriesCopyWithImpl<$Res>
@@ -72,42 +92,63 @@ class __$GetRepositoriesCopyWithImpl<$Res>
 
   @override
   _GetRepositories get _value => super._value as _GetRepositories;
+
+  @override
+  $Res call({
+    Object isRefresh = freezed,
+  }) {
+    return _then(_GetRepositories(
+      isRefresh: isRefresh == freezed ? _value.isRefresh : isRefresh as bool,
+    ));
+  }
 }
 
 class _$_GetRepositories implements _GetRepositories {
-  const _$_GetRepositories();
+  const _$_GetRepositories({this.isRefresh});
+
+  @override
+  final bool isRefresh;
 
   @override
   String toString() {
-    return 'PublicGithubRepositoriesEvent.getRepositories()';
+    return 'PublicGithubRepositoriesEvent.getRepositories(isRefresh: $isRefresh)';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is _GetRepositories);
+    return identical(this, other) ||
+        (other is _GetRepositories &&
+            (identical(other.isRefresh, isRefresh) ||
+                const DeepCollectionEquality()
+                    .equals(other.isRefresh, isRefresh)));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(isRefresh);
+
+  @override
+  _$GetRepositoriesCopyWith<_GetRepositories> get copyWith =>
+      __$GetRepositoriesCopyWithImpl<_GetRepositories>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result getRepositories(),
+    @required Result getRepositories(bool isRefresh),
   }) {
     assert(getRepositories != null);
-    return getRepositories();
+    return getRepositories(isRefresh);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result getRepositories(),
+    Result getRepositories(bool isRefresh),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (getRepositories != null) {
-      return getRepositories();
+      return getRepositories(isRefresh);
     }
     return orElse();
   }
@@ -136,5 +177,10 @@ class _$_GetRepositories implements _GetRepositories {
 }
 
 abstract class _GetRepositories implements PublicGithubRepositoriesEvent {
-  const factory _GetRepositories() = _$_GetRepositories;
+  const factory _GetRepositories({bool isRefresh}) = _$_GetRepositories;
+
+  @override
+  bool get isRefresh;
+  @override
+  _$GetRepositoriesCopyWith<_GetRepositories> get copyWith;
 }

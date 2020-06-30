@@ -27,7 +27,14 @@ class PublicGitHubRepositoriesRemoteDataSourceImpl
           .map((i) => GitHubRepositoryModel.fromJson(i))
           .toList();
     } on DioError catch (e) {
-      throw ServerException();
+      String errorMessage;
+      final statusCode = e.response.statusCode;
+      if(statusCode == 500){
+        errorMessage = 'Ошибка соединения с сервером';
+      } else {
+        errorMessage = 'Что-то пошло не так...';
+      }
+      throw ServerException(message: errorMessage);
     }
   }
 }

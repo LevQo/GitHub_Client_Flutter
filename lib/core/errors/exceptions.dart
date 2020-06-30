@@ -1,3 +1,13 @@
-class ServerException implements Exception {}
+import 'package:flutter/cupertino.dart';
 
-class CacheException implements Exception {}
+class ServerException implements Exception {
+  final String message;
+
+  const ServerException({@required this.message});
+}
+
+class CacheException implements Exception {
+  final String message;
+
+  const CacheException({@required this.message});
+}
