@@ -11,8 +11,7 @@ import 'package:github_client_flutter/features/public_repositories/presentation/
 
 class AllPublicRepositoriesPage extends StatefulWidget {
   @override
-  _AllPublicRepositoriesPageState createState() =>
-      _AllPublicRepositoriesPageState();
+  _AllPublicRepositoriesPageState createState() => _AllPublicRepositoriesPageState();
 }
 
 class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
@@ -28,22 +27,16 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PublicGithubRepositoriesBloc>(
-      create: (context) => sl<PublicGithubRepositoriesBloc>()
-        ..add(PublicGithubRepositoriesEvent.getRepositories()),
-      child: BlocConsumer<PublicGithubRepositoriesBloc,
-          PublicGithubRepositoriesState>(
+      create: (context) => sl<PublicGithubRepositoriesBloc>()..add(PublicGithubRepositoriesEvent.getRepositories()),
+      child: BlocConsumer<PublicGithubRepositoriesBloc, PublicGithubRepositoriesState>(
         listener: (context, state) {
           state.maybeWhen(
               loaded: (repositories) {
-                _refreshCompleter?.complete();
-                _refreshCompleter = Completer();
+                _hideRefreshProgress();
               },
-              error: (message){
-                _refreshCompleter?.complete();
-                _refreshCompleter = Completer();
-
-                final snackBar = new SnackBar(content: new Text('Ошибка'),
-                    backgroundColor: Colors.red);
+              error: (message) {
+                _hideRefreshProgress();
+                final snackBar = new SnackBar(content: new Text('Ошибка'), backgroundColor: Colors.red);
                 Scaffold.of(context).showSnackBar(snackBar);
               },
               orElse: () {});
@@ -52,42 +45,43 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
           return state.when(
             initial: () => Container(),
             loading: () => Center(child: CircularProgressIndicator()),
-            loaded: (repositories) =>
-                _buildRepositoriesList(repositories, false, context),
+            loaded: (repositories) => _buildRepositoriesList(repositories, false, context),
             error: (message) => Center(child: Text(message)),
-            loadingNextPage: (repositories) =>
-                _buildRepositoriesList(repositories, true, context),
+            loadingNextPage: (repositories) => _buildRepositoriesList(repositories, true, context),
           );
         },
       ),
     );
   }
 
-  Widget _buildRepositoriesList(List<GitHubRepositoryEntity> repositories,
-      bool isLoadingNextPage, BuildContext context) {
+  void _hideRefreshProgress() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = Completer();
+  }
+
+  Widget _buildRepositoriesList(
+      List<GitHubRepositoryEntity> repositories, bool isLoadingNextPage, BuildContext context) {
     return NotificationListener<ScrollNotification>(
-      onNotification: (scrollNotification) => isLoadingNextPage
-          ? false
-          : _handleScrollNotification(scrollNotification, context),
+      onNotification: (scrollNotification) =>
+          isLoadingNextPage ? false : _handleScrollNotification(scrollNotification, context),
       child: RefreshIndicator(
         onRefresh: () async {
-          context.bloc<PublicGithubRepositoriesBloc>().add(
-              PublicGithubRepositoriesEvent.getRepositories(isRefresh: true));
+          context
+              .bloc<PublicGithubRepositoriesBloc>()
+              .add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: true));
           return _refreshCompleter.future;
         },
         child: ListView.builder(
             physics: BouncingScrollPhysics(),
-            itemCount: isLoadingNextPage
-                ? repositories.length + 1
-                : repositories.length,
+            itemCount: isLoadingNextPage ? repositories.length + 1 : repositories.length,
             controller: _scrollController,
             itemBuilder: (context, index) {
               return Align(
                 child: index >= repositories.length
                     ? Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
-                    )
+                        padding: const EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
+                      )
                     : GitHubPublicRepoCard(
                         name: repositories[index].name,
                         description: repositories[index].description,
@@ -98,13 +92,9 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
     );
   }
 
-  bool _handleScrollNotification(
-      ScrollNotification notification, BuildContext context) {
-    if (notification is ScrollEndNotification &&
-        _scrollController.position.extentAfter <= 500) {
-      context
-          .bloc<PublicGithubRepositoriesBloc>()
-          .add(PublicGithubRepositoriesEvent.getRepositories());
+  bool _handleScrollNotification(ScrollNotification notification, BuildContext context) {
+    if (notification is ScrollEndNotification && _scrollController.position.extentAfter <= 500) {
+      context.bloc<PublicGithubRepositoriesBloc>().add(PublicGithubRepositoriesEvent.getRepositories());
     }
     return false;
   }

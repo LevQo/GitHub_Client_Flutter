@@ -6,46 +6,16 @@ import 'package:github_client_flutter/features/public_repositories/domain/entiti
 part 'public_github_repositories_state.freezed.dart';
 
 @freezed
-abstract class PublicGithubRepositoriesState
-    with _$PublicGithubRepositoriesState {
+abstract class PublicGithubRepositoriesState with _$PublicGithubRepositoriesState {
   const factory PublicGithubRepositoriesState.initial() = _Initial;
 
   const factory PublicGithubRepositoriesState.loading() = _Loading;
 
   const factory PublicGithubRepositoriesState.loadingNextPage(
-          {@required List<GitHubRepositoryEntity> currentRepositories}) =
-      _LoadingNextPage;
+      {@required List<GitHubRepositoryEntity> currentRepositories}) = _LoadingNextPage;
 
-  const factory PublicGithubRepositoriesState.loaded(
-      {@required List<GitHubRepositoryEntity> repositories}) = Loaded;
+  const factory PublicGithubRepositoriesState.loaded({@required List<GitHubRepositoryEntity> repositories}) =
+      Loaded;
 
   const factory PublicGithubRepositoriesState.error({String message}) = _Error;
 }
-
-//class InitialState extends PublicGithubRepositoriesState {
-//  @override
-//  List<Object> get props => [];
-//}
-//
-//class LoadingState extends PublicGithubRepositoriesState {
-//  @override
-//  List<Object> get props => [];
-//}
-//
-//class LoadedState extends PublicGithubRepositoriesState{
-//  final List<GitHubRepositoryEntity> repositories;
-//
-//  LoadedState({@required this.repositories});
-//
-//  @override
-//  List<Object> get props => [repositories];
-//}
-//
-//class ErrorState extends PublicGithubRepositoriesState{
-//  final String message;
-//
-//  ErrorState({this.message});
-//
-//  @override
-//  List<Object> get props => [message];
-//}
