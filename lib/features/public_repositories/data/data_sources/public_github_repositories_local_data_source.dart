@@ -5,18 +5,16 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class PublicGitHubRepositoriesLocalDataSource {
-  Future savePublicGitHubRepositoriesToCache(
-      List<GitHubRepositoryModel> repositories);
+  Future savePublicGitHubRepositoriesToCache(List<GitHubRepositoryModel> repositories);
 
   Future<List<GitHubRepositoryModel>> getPublicGitHubRepositoriesFromCache();
 }
 
 @LazySingleton(as: PublicGitHubRepositoriesLocalDataSource)
-class PublicGitHubRepositoriesLocalDataSourceImpl
-    implements PublicGitHubRepositoriesLocalDataSource {
+class PublicGitHubRepositoriesLocalDataSourceImpl implements PublicGitHubRepositoriesLocalDataSource {
+
   @override
-  Future<List<GitHubRepositoryModel>>
-      getPublicGitHubRepositoriesFromCache() async {
+  Future<List<GitHubRepositoryModel>> getPublicGitHubRepositoriesFromCache() async {
     await _initBox();
     final publicRepositoriesBox = Hive.box(kPublicRepositoriesBoxName);
     final List<GitHubRepositoryModel> cacheRepositories =
@@ -27,12 +25,11 @@ class PublicGitHubRepositoriesLocalDataSourceImpl
     if (cacheRepositories != null && cacheRepositories.isNotEmpty)
       return cacheRepositories;
     else
-      throw CacheException();
+      return Future.error(CacheException(message: 'Проверьте ваше соединение с интернетом'));
   }
 
   @override
-  Future savePublicGitHubRepositoriesToCache(
-      List<GitHubRepositoryModel> repositories) async {
+  Future savePublicGitHubRepositoriesToCache(List<GitHubRepositoryModel> repositories) async {
     await _initBox();
     final publicRepositoriesBox = Hive.box(kPublicRepositoriesBoxName);
     publicRepositoriesBox.put('repositories', repositories);
@@ -40,7 +37,7 @@ class PublicGitHubRepositoriesLocalDataSourceImpl
 
   Future _initBox() async {
     if (!Hive.isBoxOpen(kPublicRepositoriesBoxName)) {
-       await Hive.openBox(kPublicRepositoriesBoxName);
+      await Hive.openBox(kPublicRepositoriesBoxName);
     }
   }
 }

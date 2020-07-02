@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart';
@@ -27,75 +28,105 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PublicGithubRepositoriesBloc>(
-      create: (context) => sl<PublicGithubRepositoriesBloc>()..add(PublicGithubRepositoriesEvent.getRepositories()),
+      create: (context) =>
+          sl<PublicGithubRepositoriesBloc>()..add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: false)),
       child: BlocConsumer<PublicGithubRepositoriesBloc, PublicGithubRepositoriesState>(
         listener: (context, state) {
           state.maybeWhen(
-              loaded: (repositories) {
+              loaded: (repositories, isCache, snackMessage) {
                 _hideRefreshProgress();
+                if (snackMessage != null) _showSnackBar(snackMessage, context);
               },
-              error: (message) {
-                _hideRefreshProgress();
-                final snackBar = new SnackBar(content: new Text('Ошибка'), backgroundColor: Colors.red);
-                Scaffold.of(context).showSnackBar(snackBar);
-              },
+              error: (message) => _hideRefreshProgress(),
               orElse: () {});
         },
         builder: (context, state) {
           return state.when(
             initial: () => Container(),
             loading: () => Center(child: CircularProgressIndicator()),
-            loaded: (repositories) => _buildRepositoriesList(repositories, false, context),
-            error: (message) => Center(child: Text(message)),
-            loadingNextPage: (repositories) => _buildRepositoriesList(repositories, true, context),
+            loaded: (repositories, isCache, snackMessage) =>
+                _buildRepositoriesList(repositories, false, isCache, context),
+            error: (message) => _buildErrorContainer(message, context),
+            loadingNextPage: (repositories) => _buildRepositoriesList(repositories, true, false, context),
           );
         },
       ),
     );
   }
 
-  void _hideRefreshProgress() {
-    _refreshCompleter?.complete();
-    _refreshCompleter = Completer();
-  }
-
-  Widget _buildRepositoriesList(
-      List<GitHubRepositoryEntity> repositories, bool isLoadingNextPage, BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (scrollNotification) =>
-          isLoadingNextPage ? false : _handleScrollNotification(scrollNotification, context),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          context
-              .bloc<PublicGithubRepositoriesBloc>()
-              .add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: true));
-          return _refreshCompleter.future;
-        },
-        child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            itemCount: isLoadingNextPage ? repositories.length + 1 : repositories.length,
-            controller: _scrollController,
-            itemBuilder: (context, index) {
-              return Align(
-                child: index >= repositories.length
-                    ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
-                      )
-                    : GitHubPublicRepoCard(
-                        name: repositories[index].name,
-                        description: repositories[index].description,
-                      ),
-              );
-            }),
+  Widget _buildErrorContainer(String message, BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.0),
+            RaisedButton(
+              child: Text('Повторить'),
+              onPressed: () => _getRepositories(context: context)
+            )
+          ],
+        ),
       ),
     );
   }
 
-  bool _handleScrollNotification(ScrollNotification notification, BuildContext context) {
+  Widget _buildRepositoriesList(
+      List<GitHubRepositoryEntity> repositories, bool isLoadingNextPage, bool isCache, BuildContext context) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (scrollNotification) =>
+          isLoadingNextPage ? false : _handleScrollNotification(scrollNotification, isCache, context),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          _getRepositories(context: context, isRefresh: true);
+          return _refreshCompleter.future;
+        },
+        child: Scrollbar(
+          child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: isLoadingNextPage ? repositories.length + 1 : repositories.length,
+              controller: _scrollController,
+              itemBuilder: (context, index) {
+                return Align(
+                  child: index >= repositories.length
+                      ? Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        )
+                      : GitHubPublicRepoCard(
+                          name: repositories[index].name,
+                          description: repositories[index].description,
+                        ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+
+  void _getRepositories({BuildContext context, bool isRefresh = false}){
+    context.bloc<PublicGithubRepositoriesBloc>().add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: isRefresh));
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification, bool isCache, BuildContext context) {
     if (notification is ScrollEndNotification && _scrollController.position.extentAfter <= 500) {
-      context.bloc<PublicGithubRepositoriesBloc>().add(PublicGithubRepositoriesEvent.getRepositories());
+      if (isCache != true) _getRepositories(context: context);
     }
     return false;
+  }
+
+  void _showSnackBar(String message, BuildContext context) {
+    final snackBar = new SnackBar(content: new Text(message), backgroundColor: Colors.red);
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void _hideRefreshProgress() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = Completer();
   }
 }

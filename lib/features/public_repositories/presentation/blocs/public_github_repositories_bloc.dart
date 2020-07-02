@@ -5,7 +5,6 @@ import 'package:github_client_flutter/features/public_repositories/data/models/p
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/use_cases/get_public_github_repositories.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 import './bloc.dart';
 
 @injectable
@@ -40,24 +39,20 @@ class PublicGithubRepositoriesBloc
     final currentState = state;
     if (_lastRepoId != null && currentState is Loaded) {
       yield PublicGithubRepositoriesState.loadingNextPage(currentRepositories: currentState.repositories);
-    } else if (isRefresh != true) {
+    } else if (!isRefresh) {
       yield const PublicGithubRepositoriesState.loading();
     }
 
-//    yield await getAllGitHubRepositories
-//        .getRepos(Params(lastRepoId: _lastRepoId))
-//        .then(_handleSuccess)
-//        .catchError(_handleError);
-
-    yield* getAllGitHubRepositories
-        .getRepos(Params(lastRepoId: _lastRepoId))
-        .map((event) => PublicGithubRepositoriesState.error(message: '123'));
+    yield await getAllGitHubRepositories(Params(lastRepoId: _lastRepoId))
+        .then(_handleSuccess)
+        .catchError(_handleError);
   }
 
   PublicGithubRepositoriesState _handleSuccess(PublicGithubRepositoriesUiModel uiModel) {
     _lastRepoId = uiModel.repositories.last.id;
     final resultRepositories = _currentRepositories..addAll(uiModel.repositories);
-    return PublicGithubRepositoriesState.loaded(repositories: resultRepositories);
+    return PublicGithubRepositoriesState.loaded(
+        repositories: resultRepositories, isCache: uiModel.isCache, snackMessage: uiModel.snackMessage);
   }
 
   PublicGithubRepositoriesState _handleError(e) {

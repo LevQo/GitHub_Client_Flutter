@@ -14,8 +14,8 @@ abstract class PublicGithubRepositoriesState with _$PublicGithubRepositoriesStat
   const factory PublicGithubRepositoriesState.loadingNextPage(
       {@required List<GitHubRepositoryEntity> currentRepositories}) = _LoadingNextPage;
 
-  const factory PublicGithubRepositoriesState.loaded({@required List<GitHubRepositoryEntity> repositories}) =
-      Loaded;
+  const factory PublicGithubRepositoriesState.loaded(
+      {@required List<GitHubRepositoryEntity> repositories, bool isCache, String snackMessage}) = Loaded;
 
   const factory PublicGithubRepositoriesState.error({String message}) = _Error;
 }

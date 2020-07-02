@@ -27,9 +27,14 @@ class _$PublicGithubRepositoriesStateTearOff {
     );
   }
 
-  Loaded loaded({@required List<GitHubRepositoryEntity> repositories}) {
+  Loaded loaded(
+      {@required List<GitHubRepositoryEntity> repositories,
+      bool isCache,
+      String snackMessage}) {
     return Loaded(
       repositories: repositories,
+      isCache: isCache,
+      snackMessage: snackMessage,
     );
   }
 
@@ -51,7 +56,9 @@ mixin _$PublicGithubRepositoriesState {
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   });
   @optionalTypeArgs
@@ -59,7 +66,8 @@ mixin _$PublicGithubRepositoriesState {
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   });
@@ -145,7 +153,9 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   }) {
     assert(initial != null);
@@ -162,7 +172,8 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   }) {
@@ -245,7 +256,7 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other);
+    return identical(this, other) || (other is _Loading);
   }
 
   @override
@@ -259,7 +270,9 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   }) {
     assert(initial != null);
@@ -276,7 +289,8 @@ class _$_Loading with DiagnosticableTreeMixin implements _Loading {
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   }) {
@@ -404,7 +418,9 @@ class _$_LoadingNextPage
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   }) {
     assert(initial != null);
@@ -421,7 +437,8 @@ class _$_LoadingNextPage
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   }) {
@@ -479,7 +496,10 @@ abstract class _LoadingNextPage implements PublicGithubRepositoriesState {
 abstract class $LoadedCopyWith<$Res> {
   factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) then) =
       _$LoadedCopyWithImpl<$Res>;
-  $Res call({List<GitHubRepositoryEntity> repositories});
+  $Res call(
+      {List<GitHubRepositoryEntity> repositories,
+      bool isCache,
+      String snackMessage});
 }
 
 class _$LoadedCopyWithImpl<$Res>
@@ -494,24 +514,35 @@ class _$LoadedCopyWithImpl<$Res>
   @override
   $Res call({
     Object repositories = freezed,
+    Object isCache = freezed,
+    Object snackMessage = freezed,
   }) {
     return _then(Loaded(
       repositories: repositories == freezed
           ? _value.repositories
           : repositories as List<GitHubRepositoryEntity>,
+      isCache: isCache == freezed ? _value.isCache : isCache as bool,
+      snackMessage: snackMessage == freezed
+          ? _value.snackMessage
+          : snackMessage as String,
     ));
   }
 }
 
 class _$Loaded with DiagnosticableTreeMixin implements Loaded {
-  const _$Loaded({@required this.repositories}) : assert(repositories != null);
+  const _$Loaded({@required this.repositories, this.isCache, this.snackMessage})
+      : assert(repositories != null);
 
   @override
   final List<GitHubRepositoryEntity> repositories;
+  @override
+  final bool isCache;
+  @override
+  final String snackMessage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PublicGithubRepositoriesState.loaded(repositories: $repositories)';
+    return 'PublicGithubRepositoriesState.loaded(repositories: $repositories, isCache: $isCache, snackMessage: $snackMessage)';
   }
 
   @override
@@ -519,7 +550,9 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'PublicGithubRepositoriesState.loaded'))
-      ..add(DiagnosticsProperty('repositories', repositories));
+      ..add(DiagnosticsProperty('repositories', repositories))
+      ..add(DiagnosticsProperty('isCache', isCache))
+      ..add(DiagnosticsProperty('snackMessage', snackMessage));
   }
 
   @override
@@ -529,7 +562,10 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(repositories);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(repositories) ^
+      const DeepCollectionEquality().hash(isCache) ^
+      const DeepCollectionEquality().hash(snackMessage);
 
   @override
   $LoadedCopyWith<Loaded> get copyWith =>
@@ -543,7 +579,9 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   }) {
     assert(initial != null);
@@ -551,7 +589,7 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
     assert(loadingNextPage != null);
     assert(loaded != null);
     assert(error != null);
-    return loaded(repositories);
+    return loaded(repositories, isCache, snackMessage);
   }
 
   @override
@@ -560,13 +598,14 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (loaded != null) {
-      return loaded(repositories);
+      return loaded(repositories, isCache, snackMessage);
     }
     return orElse();
   }
@@ -607,10 +646,14 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
 }
 
 abstract class Loaded implements PublicGithubRepositoriesState {
-  const factory Loaded({@required List<GitHubRepositoryEntity> repositories}) =
-      _$Loaded;
+  const factory Loaded(
+      {@required List<GitHubRepositoryEntity> repositories,
+      bool isCache,
+      String snackMessage}) = _$Loaded;
 
   List<GitHubRepositoryEntity> get repositories;
+  bool get isCache;
+  String get snackMessage;
   $LoadedCopyWith<Loaded> get copyWith;
 }
 
@@ -682,7 +725,9 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
     @required
         Result loadingNextPage(
             List<GitHubRepositoryEntity> currentRepositories),
-    @required Result loaded(List<GitHubRepositoryEntity> repositories),
+    @required
+        Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+            String snackMessage),
     @required Result error(String message),
   }) {
     assert(initial != null);
@@ -699,7 +744,8 @@ class _$_Error with DiagnosticableTreeMixin implements _Error {
     Result initial(),
     Result loading(),
     Result loadingNextPage(List<GitHubRepositoryEntity> currentRepositories),
-    Result loaded(List<GitHubRepositoryEntity> repositories),
+    Result loaded(List<GitHubRepositoryEntity> repositories, bool isCache,
+        String snackMessage),
     Result error(String message),
     @required Result orElse(),
   }) {

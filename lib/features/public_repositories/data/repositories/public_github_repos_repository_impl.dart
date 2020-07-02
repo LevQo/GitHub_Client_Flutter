@@ -21,49 +21,17 @@ class PublicGitHubReposRepositoryImpl implements PublicGitHubReposRepository {
       {@required this.remoteDataSource, @required this.localDataSource, @required this.networkInfo});
 
   @override
-  Future<Either<Failure, List<GitHubRepositoryEntity>>> getPublicGitHubRepositories(int lastRepoId) async {
+  Future<PublicGithubRepositoriesUiModel> getPublicGitHubRepositories(int lastRepoId) async {
     if (await networkInfo.isConnected) {
-      try {
-        final repositories = await remoteDataSource.getPublicGitHubRepositories(lastRepoId);
-        localDataSource.savePublicGitHubRepositoriesToCache(repositories);
-        return Right(repositories);
-      } on ServerException catch (e) {
-        try {
-          await localDataSource
-              .getPublicGitHubRepositoriesFromCache()
-              .then((repositories) => Right(repositories))
-              .catchError(() => Left(CacheFailure(message: e.message)));
-
-          final cachePublicGitHubRepositories =
-              await localDataSource.getPublicGitHubRepositoriesFromCache().catchError(() {});
-
-          return Right(cachePublicGitHubRepositories);
-        } on CacheException catch (e) {
-          return Left(CacheFailure(message: e.message));
-        }
-        return Left(ServerFailure(message: e.message));
-      }
-    } else {
-      try {
-        final cachePublicGitHubRepositories = await localDataSource.getPublicGitHubRepositoriesFromCache();
-        return Right(cachePublicGitHubRepositories);
-      } on CacheException catch (e) {
-        return Left(CacheFailure(message: e.message));
-      }
-    }
-  }
-
-  @override
-  Stream<PublicGithubRepositoriesUiModel> getPublicGitHubRepositories1(int lastRepoId) async* {
-    if (await networkInfo.isConnected) {
-      yield await remoteDataSource
+      return await remoteDataSource
           .getPublicGitHubRepositories(lastRepoId)
-          .then((repositories) => _handleSuccessRemote(repositories))
-          .catchError((e) {});
+          .then((repositories) => _handleSuccessRemote(repositories));
     } else {
-      yield await localDataSource
-          .getPublicGitHubRepositoriesFromCache()
-          .then((repositories) => PublicGithubRepositoriesUiModel(repositories: repositories, isCache: true));
+      return await localDataSource.getPublicGitHubRepositoriesFromCache().then((repositories) =>
+          PublicGithubRepositoriesUiModel(
+              repositories: repositories,
+              isCache: true,
+              snackMessage: 'Проверьте ваше интернет соединение. Данные полученны из кэша'));
     }
   }
 
