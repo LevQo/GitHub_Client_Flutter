@@ -1,13 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
-import 'package:github_client_flutter/core/errors/exceptions.dart';
-import 'package:github_client_flutter/core/errors/failures.dart';
 import 'package:github_client_flutter/core/network/network_info.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_local_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/models/public_github_repositories_ui_model.dart';
-import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/repositories/public_github_repos_repository.dart';
 import 'package:injectable/injectable.dart';
 

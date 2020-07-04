@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
@@ -58,8 +59,10 @@ void main() async {
     final List<GitHubRepositoryModel> tGitHubRepositoriesList = [tGitHubRepositoryModel];
     final tGithubRepositoriesUiModelFromRemote =
         PublicGithubRepositoriesUiModel(repositories: tGitHubRepositoriesList);
-    final tGithubRepositoriesUiModelFromCache =
-        PublicGithubRepositoriesUiModel(repositories: tGitHubRepositoriesList, isCache: true, snackMessage: 'Проверьте ваше интернет соединение. Данные полученны из кэша');
+    final tGithubRepositoriesUiModelFromCache = PublicGithubRepositoriesUiModel(
+        repositories: tGitHubRepositoriesList,
+        isCache: true,
+        snackMessage: 'Проверьте ваше интернет соединение. Данные полученны из кэша');
 
     test('should check if the device is online', () async {
       // arrange
@@ -84,24 +87,20 @@ void main() async {
       });
 
       test('should return server exception when the call to remote source is unsuccessful', () async {
-        //TODO: TO CHANGE THE TEST
-
         // arrange
         when(mockRemoteDataSource.getPublicGitHubRepositories(any)).thenThrow(ServerException(message: ''));
-//            .thenAnswer((_) => Future.error(ServerException(message: '')));
         // act
-        var exception;
-        final result = await repository.getPublicGitHubRepositories(null).catchError((e) => exception = e);
+        final call = repository.getPublicGitHubRepositories;
         // assert
-        expect(exception, ServerException(message: ''));
-//        verify(mockRemoteDataSource.getPublicGitHubRepositories(null));
+        expect(() async => await call(null), throwsA(isInstanceOf<ServerException>()));
       });
     });
 
     runTestsOffline(() {
       test('should return last loaded list of repositories from cache', () async {
         // arrange
-        when(mockLocalDataSource.getPublicGitHubRepositoriesFromCache()).thenAnswer((_) async => tGitHubRepositoriesList);
+        when(mockLocalDataSource.getPublicGitHubRepositoriesFromCache())
+            .thenAnswer((_) async => tGitHubRepositoriesList);
         // act
         final result = await repository.getPublicGitHubRepositories(null);
         // assert

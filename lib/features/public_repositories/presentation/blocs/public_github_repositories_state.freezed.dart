@@ -557,7 +557,17 @@ class _$Loaded with DiagnosticableTreeMixin implements Loaded {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other);
+    return identical(this, other) ||
+        (other is Loaded &&
+            (identical(other.repositories, repositories) ||
+                const DeepCollectionEquality()
+                    .equals(other.repositories, repositories)) &&
+            (identical(other.isCache, isCache) ||
+                const DeepCollectionEquality()
+                    .equals(other.isCache, isCache)) &&
+            (identical(other.snackMessage, snackMessage) ||
+                const DeepCollectionEquality()
+                    .equals(other.snackMessage, snackMessage)));
   }
 
   @override

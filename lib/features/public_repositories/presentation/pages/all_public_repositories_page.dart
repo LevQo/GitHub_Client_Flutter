@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/gestures.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart';
+import 'package:github_client_flutter/core/routes/router.gr.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_bloc.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_event.dart';
@@ -99,6 +100,9 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
                           child: CircularProgressIndicator(),
                         )
                       : GitHubPublicRepoCard(
+                          onTap: () {
+                            ExtendedNavigator.of(context).pushNamed(Routes.repositoryDetailsPage);
+                          },
                           name: repositories[index].name,
                           description: repositories[index].description,
                         ),

@@ -5,30 +5,39 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
 import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http; //TODO: TO REMOVE
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
-class MockDio extends Mock implements Dio {}
+class MockDioAdapter extends Mock implements HttpClientAdapter {}
 
 void main() {
+  final tDio = Dio()..options.baseUrl = 'https://api.github.com';
   PublicGitHubRepositoriesRemoteDataSourceImpl dataSource;
-  MockDio mockDioClient;
+  MockDioAdapter mockDioAdapter;
+
 
   setUp(() {
-    mockDioClient = MockDio();
-    dataSource = PublicGitHubRepositoriesRemoteDataSourceImpl(client: mockDioClient);
+    mockDioAdapter = MockDioAdapter();
+    tDio.httpClientAdapter = mockDioAdapter;
+//     = MockDio()..options.baseUrl = 'https://api.github.com';
+    dataSource = PublicGitHubRepositoriesRemoteDataSourceImpl(client: tDio);
   });
-  
-  void setUpMockHttpClientSuccess200(){
-    when(mockDioClient.get(any).thenAnswer(
-            (_) async => http.Response(fixture('public_repositories.json'), 200));
+
+  void setUpMockHttpClientSuccess200() {
+    final responseBody = ResponseBody.fromString(fixture('public_repositories.json'), 200);
+
+    when(mockDioAdapter.fetch(any, any, any)).thenAnswer((_) async => responseBody);
+//    when(mockDioClient.get(any)).thenAnswer(_) async => http.Response(fixture('public_repositories.json'), 200)));
   }
 
-  void setUpMockHttpClientFailure404(){
-    when(mockDioClient.get(any, headers: anyNamed('headers')))
-        .thenAnswer((_) async => http.Response('Something went wrong', 404));
+  void setUpMockHttpClientFailure404() {
+    when(tDio.get(any)).thenAnswer((_) async => Response(statusCode: 404));
+
+//    when(mockDioClient.get(any))
+//    .
+//        .then((_) async => http.Response('Something went wrong', 404));
   }
 
   group('get public github repositories', () {
@@ -41,27 +50,21 @@ void main() {
       // arrange
       setUpMockHttpClientSuccess200();
       // act
-      dataSource.getPublicGitHubRepositories(tLastRepoId);
+      await dataSource.getPublicGitHubRepositories(tLastRepoId);
       // assert
-      verify(mockDioClient
-          .get('https://api.github.com/repositories/$tLastRepoId', headers: {
-        'Content-Type': 'application/json',
-      }));
+      verify(tDio.get('/repositories', queryParameters: {'since': tLastRepoId}));
     });
 
-    test(
-        'should return list of github repositories when the response code is 200',
-        () async {
+    test('should return list of github repositories when the response code is 200', () async {
       // arrange
-          setUpMockHttpClientSuccess200();
+      setUpMockHttpClientSuccess200();
       // act
       final result = await dataSource.getPublicGitHubRepositories(tLastRepoId);
       // assert
       expect(result, equals(tGitHubRepositories));
     });
 
-    test('should throw ServerException when the response code is 404 or other',
-        () async {
+    test('should throw ServerException when the response code is 404 or other', () async {
       // arrange
       setUpMockHttpClientFailure404();
       // act
