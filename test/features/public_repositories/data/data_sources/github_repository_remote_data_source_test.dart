@@ -4,8 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
-import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
-import 'package:http/http.dart' as http; //TODO: TO REMOVE
+import 'package:github_client_flutter/features/public_repositories/data/models/github_repository_model.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
@@ -21,7 +20,6 @@ void main() {
   setUp(() {
     mockDioAdapter = MockDioAdapter();
     tDio.httpClientAdapter = mockDioAdapter;
-//     = MockDio()..options.baseUrl = 'https://api.github.com';
     dataSource = PublicGitHubRepositoriesRemoteDataSourceImpl(client: tDio);
   });
 
@@ -40,6 +38,7 @@ void main() {
 //        .then((_) async => http.Response('Something went wrong', 404));
   }
 
+  //TODO: Доделать тесты
   group('get public github repositories', () {
     final tLastRepoId = 365;
     final jsonMap = json.decode(fixture('public_repositories.json')) as List;

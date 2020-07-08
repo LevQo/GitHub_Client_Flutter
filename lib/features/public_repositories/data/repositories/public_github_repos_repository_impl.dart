@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
+import 'package:github_client_flutter/features/public_repositories/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/network/network_info.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_local_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
@@ -27,7 +27,7 @@ class PublicGitHubReposRepositoryImpl implements PublicGitHubReposRepository {
           PublicGithubRepositoriesUiModel(
               repositories: repositories,
               isCache: true,
-              snackMessage: 'Проверьте ваше интернет соединение. Данные полученны из кэша'));
+              snackMessage: 'Check your internet connection. The data from cache'));
     }
   }
 

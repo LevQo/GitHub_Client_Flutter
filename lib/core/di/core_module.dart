@@ -4,10 +4,12 @@ import 'package:injectable/injectable.dart';
 
 @module
 abstract class CoreModule {
+  static const baseUrl = 'https://api.github.com';
+
   @lazySingleton
   Dio get dio => Dio()
     ..interceptors.add(LogInterceptor(responseBody: true))
-    ..options.baseUrl = 'https://api.github.com';
+    ..options.baseUrl = baseUrl;
 
   @lazySingleton
   DataConnectionChecker get dataConnectionChecker => DataConnectionChecker();

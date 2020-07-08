@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
-import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
+import 'package:github_client_flutter/features/public_repositories/data/models/github_repository_model.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class PublicGitHubRepositoriesRemoteDataSource {
@@ -26,11 +26,11 @@ class PublicGitHubRepositoriesRemoteDataSourceImpl implements PublicGitHubReposi
       (response.data as List).map((i) => GitHubRepositoryModel.fromJson(i)).toList();
 
   Future<List<GitHubRepositoryModel>> _handleError(e) async {
-    String errorMessage = 'Что-то пошло не так...';
+    String errorMessage = 'Something went wrong...';
     if (e is DioError) {
       final statusCode = e.response?.statusCode;
       if (statusCode == 500) {
-        errorMessage = 'Ошибка соединения с сервером';
+        errorMessage = 'Server connection error';
       }
     }
     return Future.error(ServerException(message: errorMessage));

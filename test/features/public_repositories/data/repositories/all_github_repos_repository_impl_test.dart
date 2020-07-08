@@ -1,11 +1,6 @@
-import 'dart:math';
-
-import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
+import 'package:github_client_flutter/features/public_repositories/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
-import 'package:github_client_flutter/core/errors/failures.dart';
 import 'package:github_client_flutter/core/network/network_info.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_local_data_source.dart';
 import 'package:github_client_flutter/features/public_repositories/data/data_sources/public_github_repositories_remote_data_source.dart';
@@ -59,10 +54,11 @@ void main() async {
     final List<GitHubRepositoryModel> tGitHubRepositoriesList = [tGitHubRepositoryModel];
     final tGithubRepositoriesUiModelFromRemote =
         PublicGithubRepositoriesUiModel(repositories: tGitHubRepositoriesList);
+
     final tGithubRepositoriesUiModelFromCache = PublicGithubRepositoriesUiModel(
         repositories: tGitHubRepositoriesList,
         isCache: true,
-        snackMessage: 'Проверьте ваше интернет соединение. Данные полученны из кэша');
+        snackMessage: 'Check your internet connection. Data from cache');
 
     test('should check if the device is online', () async {
       // arrange

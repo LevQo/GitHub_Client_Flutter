@@ -1,15 +1,11 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:github_client_flutter/core/errors/failures.dart';
-import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/use_cases/get_public_github_repositories.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_bloc.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_state.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/bloc.dart';
 import 'package:mockito/mockito.dart';
 
-class MockGetAllGitHubRepositories extends Mock
-    implements GetPublicGitHubRepositories {}
+class MockGetAllGitHubRepositories extends Mock implements GetPublicGitHubRepositories {}
 
 void main() {
   PublicGithubRepositoriesBloc bloc;
@@ -17,8 +13,7 @@ void main() {
 
   setUp(() {
     mockGetAllGitHubRepositories = MockGetAllGitHubRepositories();
-    bloc = PublicGithubRepositoriesBloc(
-        getAllGitHubRepositories: mockGetAllGitHubRepositories);
+    bloc = PublicGithubRepositoriesBloc(getAllGitHubRepositories: mockGetAllGitHubRepositories);
   });
 
   test('initialState should be InitialState', () {

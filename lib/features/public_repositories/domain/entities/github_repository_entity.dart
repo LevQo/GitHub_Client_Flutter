@@ -6,13 +6,15 @@ class GitHubRepositoryEntity extends Equatable {
   final String name;
   final String description;
   final String url;
+  final String owner;
 
   GitHubRepositoryEntity(
       {@required this.id,
       @required this.name,
       @required this.description,
-      @required this.url});
+      @required this.url,
+      @required this.owner});
 
   @override
-  List<Object> get props => [id, name, description, url];
+  List<Object> get props => [id, name, description, url, owner];
 }

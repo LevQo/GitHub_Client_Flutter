@@ -28,29 +28,34 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PublicGithubRepositoriesBloc>(
-      create: (context) =>
-          sl<PublicGithubRepositoriesBloc>()..add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: false)),
-      child: BlocConsumer<PublicGithubRepositoriesBloc, PublicGithubRepositoriesState>(
-        listener: (context, state) {
-          state.maybeWhen(
-              loaded: (repositories, isCache, snackMessage) {
-                _hideRefreshProgress();
-                if (snackMessage != null) _showSnackBar(snackMessage, context);
-              },
-              error: (message) => _hideRefreshProgress(),
-              orElse: () {});
-        },
-        builder: (context, state) {
-          return state.when(
-            initial: () => Container(),
-            loading: () => Center(child: CircularProgressIndicator()),
-            loaded: (repositories, isCache, snackMessage) =>
-                _buildRepositoriesList(repositories, false, isCache, context),
-            error: (message) => _buildErrorContainer(message, context),
-            loadingNextPage: (repositories) => _buildRepositoriesList(repositories, true, false, context),
-          );
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Repositories')
+      ),
+      body: BlocProvider<PublicGithubRepositoriesBloc>(
+        create: (context) => sl<PublicGithubRepositoriesBloc>()
+          ..add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: false)),
+        child: BlocConsumer<PublicGithubRepositoriesBloc, PublicGithubRepositoriesState>(
+          listener: (context, state) {
+            state.maybeWhen(
+                loaded: (repositories, isCache, snackMessage) {
+                  _hideRefreshProgress();
+                  if (snackMessage != null) _showSnackBar(snackMessage, context);
+                },
+                error: (message) => _hideRefreshProgress(),
+                orElse: () {});
+          },
+          builder: (context, state) {
+            return state.when(
+              initial: () => Container(),
+              loading: () => Center(child: CircularProgressIndicator()),
+              loaded: (repositories, isCache, snackMessage) =>
+                  _buildRepositoriesList(repositories, false, isCache, context),
+              error: (message) => _buildErrorContainer(message, context),
+              loadingNextPage: (repositories) => _buildRepositoriesList(repositories, true, false, context),
+            );
+          },
+        ),
       ),
     );
   }
@@ -67,10 +72,7 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 16.0),
-            RaisedButton(
-              child: Text('Повторить'),
-              onPressed: () => _getRepositories(context: context)
-            )
+            RaisedButton(child: Text('Retry'), onPressed: () => _getRepositories(context: context))
           ],
         ),
       ),
@@ -100,11 +102,13 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
                           child: CircularProgressIndicator(),
                         )
                       : GitHubPublicRepoCard(
-                          onTap: () {
-                            ExtendedNavigator.of(context).pushNamed(Routes.repositoryDetailsPage);
+                          onTap: (owner, repo) {
+                            ExtendedNavigator.of(context).pushNamed(Routes.repositoryDetailsPage,
+                                arguments: RepositoryDetailsPageArguments(owner: owner, repo: repo));
                           },
                           name: repositories[index].name,
                           description: repositories[index].description,
+                          owner: repositories[index].owner,
                         ),
                 );
               }),
@@ -113,8 +117,10 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
     );
   }
 
-  void _getRepositories({BuildContext context, bool isRefresh = false}){
-    context.bloc<PublicGithubRepositoriesBloc>().add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: isRefresh));
+  void _getRepositories({BuildContext context, bool isRefresh = false}) {
+    context
+        .bloc<PublicGithubRepositoriesBloc>()
+        .add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: isRefresh));
   }
 
   bool _handleScrollNotification(ScrollNotification notification, bool isCache, BuildContext context) {

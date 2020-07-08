@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:github_client_flutter/core/data/models/github_repository_model.dart';
+import 'package:github_client_flutter/features/public_repositories/data/models/github_repository_model.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart' as di;
 import 'package:github_client_flutter/core/routes/router.gr.dart';
 import 'package:hive/hive.dart';
@@ -23,12 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GitHubClient',
+      title: 'GitHub Client',
       theme: ThemeData(),
-      builder: ExtendedNavigator<Router>(
-        router: Router(),
-        initialRoute: Routes.mainPage,
-      ),
+      builder: ExtendedNavigator<Router>(router: Router()),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

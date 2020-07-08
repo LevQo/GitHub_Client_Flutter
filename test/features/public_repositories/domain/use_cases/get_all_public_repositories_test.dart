@@ -5,20 +5,19 @@ import 'package:github_client_flutter/features/public_repositories/domain/reposi
 import 'package:github_client_flutter/features/public_repositories/domain/use_cases/get_public_github_repositories.dart';
 import 'package:mockito/mockito.dart';
 
-class MockPublicGithubReposRepository extends Mock
-    implements PublicGitHubReposRepository {}
+class MockPublicGithubReposRepository extends Mock implements PublicGitHubReposRepository {}
 
 void main() {
   MockPublicGithubReposRepository mockPublicGithubReposRepository;
-  GetPublicGitHubRepositories usecase;
+  GetPublicGitHubRepositories useCase;
 
   setUp(() {
     mockPublicGithubReposRepository = MockPublicGithubReposRepository();
-    usecase = GetPublicGitHubRepositories(mockPublicGithubReposRepository);
+    useCase = GetPublicGitHubRepositories(mockPublicGithubReposRepository);
   });
 
   final List<GitHubRepositoryEntity> tGithubRepositories = [
-    GitHubRepositoryEntity(id: 0, name: 'name', description: 'description', url: 'url')
+    GitHubRepositoryEntity(id: 0, name: 'name', description: 'description', url: 'url', owner: 'owner')
   ];
 
   final tResultUiModel = PublicGithubRepositoriesUiModel(repositories: tGithubRepositories);
@@ -28,7 +27,7 @@ void main() {
     when(mockPublicGithubReposRepository.getPublicGitHubRepositories(any))
         .thenAnswer((_) async => tResultUiModel);
     // act
-    final result = await usecase(Params(lastRepoId: null));
+    final result = await useCase(Params(lastRepoId: null));
     // assert
     expect(result, tResultUiModel);
     verify(mockPublicGithubReposRepository.getPublicGitHubRepositories(null));

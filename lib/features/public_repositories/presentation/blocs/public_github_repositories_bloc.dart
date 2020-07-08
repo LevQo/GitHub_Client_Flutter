@@ -55,7 +55,6 @@ class PublicGithubRepositoriesBloc
         repositories: resultRepositories, isCache: uiModel.isCache, snackMessage: uiModel.snackMessage);
   }
 
-  PublicGithubRepositoriesState _handleError(e) {
-    return PublicGithubRepositoriesState.error(message: e?.message);
-  }
+  PublicGithubRepositoriesState _handleError(e) => PublicGithubRepositoriesState.error(message: e?.message);
+
 }
