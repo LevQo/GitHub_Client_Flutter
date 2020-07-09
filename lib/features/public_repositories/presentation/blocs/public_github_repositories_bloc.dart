@@ -15,8 +15,7 @@ class PublicGithubRepositoriesBloc
   int _lastRepoId;
   List<GitHubRepositoryEntity> _currentRepositories = [];
 
-  PublicGithubRepositoriesBloc({@required this.getAllGitHubRepositories})
-      : assert(getAllGitHubRepositories != null);
+  PublicGithubRepositoriesBloc({@required this.getAllGitHubRepositories}) : assert(getAllGitHubRepositories != null);
 
   @override
   PublicGithubRepositoriesState get initialState => const PublicGithubRepositoriesState.initial();

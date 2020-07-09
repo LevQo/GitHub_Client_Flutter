@@ -8,11 +8,11 @@ class MockRepositoryDetailsRepository extends Mock implements RepositoryDetailsR
 
 void main() {
   MockRepositoryDetailsRepository mockRepository;
-  GetDetailsRepositoryUseCase useCase;
+  GetRepositoryDetailsUseCase useCase;
 
   setUp(() {
     mockRepository = MockRepositoryDetailsRepository();
-    useCase = GetDetailsRepositoryUseCase(repository: mockRepository);
+    useCase = GetRepositoryDetailsUseCase(repository: mockRepository);
   });
 
   final tDetails = RepositoryDetailsEntity(

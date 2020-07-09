@@ -23,14 +23,5 @@ class UserDetailsDataSourceImpl implements UserDetailsDataSource {
 
   UserDetailsModel _handleSuccess(Response response) => UserDetailsModel.fromJson(response.data);
 
-  Future<UserDetailsModel> _handleError(e) async {
-    String errorMessage = 'Something went wrong...';
-    if (e is DioError) {
-      final statusCode = e.response?.statusCode;
-      if (statusCode == 500) {
-        errorMessage = 'Server connection error';
-      }
-    }
-    return Future.error(ServerException(message: errorMessage));
-  }
+  Future<UserDetailsModel> _handleError(e) async => Future.error(ServerException(message: e.parseMessage));
 }

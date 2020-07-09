@@ -8,7 +8,7 @@ import './bloc.dart';
 
 @injectable
 class RepositoryDetailsBloc extends Bloc<RepositoryDetailsEvent, RepositoryDetailsState> {
-  final GetDetailsRepositoryUseCase getRepositoryDetails;
+  final GetRepositoryDetailsUseCase getRepositoryDetails;
 
   RepositoryDetailsBloc({@required this.getRepositoryDetails});
 

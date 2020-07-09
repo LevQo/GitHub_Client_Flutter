@@ -43,15 +43,14 @@ void $initGetIt(GetIt g, {String environment}) {
       RepositoryDetailsRepositoryImpl(
           dataSource: g<RepositoryDetailsDataSource>(),
           networkInfo: g<NetworkInfo>()));
-  g.registerFactory<String>(() => coreModule.baseUrl);
   g.registerLazySingleton<UserDetailsDataSource>(
       () => UserDetailsDataSourceImpl(client: g<Dio>()));
   g.registerLazySingleton<UserDetailsRepository>(() =>
       UserDetailsRepositoryImpl(
           dataSource: g<UserDetailsDataSource>(),
           networkInfo: g<NetworkInfo>()));
-  g.registerLazySingleton<GetDetailsRepositoryUseCase>(() =>
-      GetDetailsRepositoryUseCase(
+  g.registerLazySingleton<GetRepositoryDetailsUseCase>(() =>
+      GetRepositoryDetailsUseCase(
           repository: g<RepositoryDetailsRepository>()));
   g.registerLazySingleton<GetUserDetailsUseCase>(
       () => GetUserDetailsUseCase(repository: g<UserDetailsRepository>()));
@@ -62,7 +61,7 @@ void $initGetIt(GetIt g, {String environment}) {
             networkInfo: g<NetworkInfo>(),
           ));
   g.registerFactory<RepositoryDetailsBloc>(() => RepositoryDetailsBloc(
-      getRepositoryDetails: g<GetDetailsRepositoryUseCase>()));
+      getRepositoryDetails: g<GetRepositoryDetailsUseCase>()));
   g.registerFactory<UserDetailsBloc>(
       () => UserDetailsBloc(getUserDetails: g<GetUserDetailsUseCase>()));
   g.registerLazySingleton<GetPublicGitHubRepositories>(

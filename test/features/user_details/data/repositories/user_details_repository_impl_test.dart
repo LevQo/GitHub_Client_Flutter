@@ -32,15 +32,6 @@ void main() {
     });
   }
 
-  void runTestsOffline(Function body) {
-    group('device is offline', () {
-      setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      });
-      body();
-    });
-  }
-
   final tUserDetails = UserDetailsModel(
       login: 'octocat',
       name: 'monalisa octocat',
@@ -62,7 +53,7 @@ void main() {
     });
 
     runTestsOnline(() {
-      test('should return data when the call is successful', () async {
+      test('should return UserDetailsModel when the call is successful', () async {
         // arrange
         when(mockDataSource.getUserDetails(any)).thenAnswer((_) async => tUserDetails);
         // act

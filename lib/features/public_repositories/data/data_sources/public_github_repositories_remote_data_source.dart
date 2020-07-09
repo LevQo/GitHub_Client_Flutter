@@ -25,14 +25,6 @@ class PublicGitHubRepositoriesRemoteDataSourceImpl implements PublicGitHubReposi
   List<GitHubRepositoryModel> _handleSuccess(Response response) =>
       (response.data as List).map((i) => GitHubRepositoryModel.fromJson(i)).toList();
 
-  Future<List<GitHubRepositoryModel>> _handleError(e) async {
-    String errorMessage = 'Something went wrong...';
-    if (e is DioError) {
-      final statusCode = e.response?.statusCode;
-      if (statusCode == 500) {
-        errorMessage = 'Server connection error';
-      }
-    }
-    return Future.error(ServerException(message: errorMessage));
-  }
+  Future<List<GitHubRepositoryModel>> _handleError(e) async =>
+      Future.error(ServerException(message: e.parseMessage));
 }

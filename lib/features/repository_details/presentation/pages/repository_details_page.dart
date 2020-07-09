@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart';
 import 'package:github_client_flutter/core/routes/router.gr.dart';
+import 'package:github_client_flutter/core/widgets/error_container.dart';
 import 'package:github_client_flutter/features/repository_details/domain/entities/repository_details_entity.dart';
 import 'package:github_client_flutter/features/repository_details/domain/use_cases/get_details_use_case.dart';
 import 'package:github_client_flutter/features/repository_details/presentation/blocs/bloc.dart';
@@ -19,7 +20,7 @@ class RepositoryDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RepositoryDetailsBloc(getRepositoryDetails: sl<GetDetailsRepositoryUseCase>())
+      create: (context) => RepositoryDetailsBloc(getRepositoryDetails: sl<GetRepositoryDetailsUseCase>())
         ..add(RepositoryDetailsEvent.getDetails(owner: owner, repo: repo)),
       child: BlocBuilder<RepositoryDetailsBloc, RepositoryDetailsState>(
         builder: (context, state) {
@@ -61,20 +62,11 @@ class RepositoryDetailsPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                message,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.0),
-              RaisedButton(
-                  child: Text('Повторить'),
-                  onPressed: () => context
-                      .bloc<RepositoryDetailsBloc>()
-                      .add(RepositoryDetailsEvent.getDetails(owner: owner, repo: repo)))
-            ],
+          child: ErrorContainer(
+            message: message,
+            onRetry: () => context
+                .bloc<RepositoryDetailsBloc>()
+                .add(RepositoryDetailsEvent.getDetails(owner: owner, repo: repo)),
           ),
         ),
       ),

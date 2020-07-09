@@ -6,10 +6,10 @@ import 'package:github_client_flutter/features/repository_details/domain/reposit
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
-class GetDetailsRepositoryUseCase implements UseCase<RepositoryDetailsEntity, RepositoryDetailsParams>{
+class GetRepositoryDetailsUseCase implements UseCase<RepositoryDetailsEntity, RepositoryDetailsParams>{
   final RepositoryDetailsRepository repository;
 
-  GetDetailsRepositoryUseCase({this.repository});
+  GetRepositoryDetailsUseCase({this.repository});
 
   @override
   Future<RepositoryDetailsEntity> call(RepositoryDetailsParams params) async {

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:github_client_flutter/core/di/injection_container.dart';
-import 'package:github_client_flutter/features/repository_details/presentation/widgets/repository_info_card.dart';
 import 'package:github_client_flutter/core/utils/extentions.dart';
+import 'package:github_client_flutter/core/widgets/error_container.dart';
 import 'package:github_client_flutter/features/user_details/domain/entities/user_details_entity.dart';
 import 'package:github_client_flutter/features/user_details/domain/use_cases/get_user_details_use_case.dart';
 import 'package:github_client_flutter/features/user_details/presentation/blocs/bloc.dart';
 
 class UserDetailsPage extends StatelessWidget {
   final String username;
+  final GetUserDetailsUseCase useCase;
 
-  const UserDetailsPage({this.username});
+  const UserDetailsPage({@required this.username, @required this.useCase});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<UserDetailsBloc>(
-      create: (context) =>
-      UserDetailsBloc(getUserDetails: sl<GetUserDetailsUseCase>())
+      create: (context) => UserDetailsBloc(getUserDetails: useCase)
         ..add(UserDetailsEvent.getDetails(username: username)),
       child: BlocBuilder<UserDetailsBloc, UserDetailsState>(
         builder: (context, state) {
@@ -58,21 +57,10 @@ class UserDetailsPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                message,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.0),
-              RaisedButton(
-                  child: Text('Повторить'),
-                  onPressed: () =>
-                      context
-                          .bloc<UserDetailsBloc>()
-                          .add(UserDetailsEvent.getDetails(username: username)))
-            ],
+          child: ErrorContainer(
+            message: message,
+            onRetry: () =>
+                context.bloc<UserDetailsBloc>().add(UserDetailsEvent.getDetails(username: username)),
           ),
         ),
       ),
@@ -99,7 +87,8 @@ class UserDetailsPage extends StatelessWidget {
               SizedBox(height: 16.0),
               Text(details.name ?? '', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)),
               SizedBox(height: 16.0),
-              Text('${details.followers} followers - ${details.following} following', style: TextStyle(fontSize: 16.0)),
+              Text('${details.followers} followers - ${details.following} following',
+                  style: TextStyle(fontSize: 16.0)),
               SizedBox(height: 16.0),
               Container(height: 1.0, width: context.screenWidth * 0.8, color: Colors.grey),
               Padding(

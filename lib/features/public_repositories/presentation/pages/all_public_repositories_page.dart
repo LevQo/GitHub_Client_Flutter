@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_client_flutter/core/di/injection_container.dart';
 import 'package:github_client_flutter/core/routes/router.gr.dart';
+import 'package:github_client_flutter/core/widgets/error_container.dart';
 import 'package:github_client_flutter/features/public_repositories/domain/entities/github_repository_entity.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_bloc.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/blocs/public_github_repositories_event.dart';
@@ -29,9 +30,7 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Repositories')
-      ),
+      appBar: AppBar(title: Text('Repositories')),
       body: BlocProvider<PublicGithubRepositoriesBloc>(
         create: (context) => sl<PublicGithubRepositoriesBloc>()
           ..add(PublicGithubRepositoriesEvent.getRepositories(isRefresh: false)),
@@ -64,16 +63,9 @@ class _AllPublicRepositoriesPageState extends State<AllPublicRepositoriesPage> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16.0),
-            RaisedButton(child: Text('Retry'), onPressed: () => _getRepositories(context: context))
-          ],
+        child: ErrorContainer(
+          message: message,
+          onRetry: () => _getRepositories(context: context),
         ),
       ),
     );

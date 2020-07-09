@@ -16,7 +16,7 @@ class RepositoryDetailsRepositoryImpl implements RepositoryDetailsRepository {
   @override
   Future<RepositoryDetailsEntity> getRepositoryDetails(String owner, String repo) async {
     if (await networkInfo.isConnected)
-      return await dataSource.getRepositoryDetails(owner: owner, repo: repo);
+      return await dataSource.getRepositoryDetails(owner, repo);
     else
       return Future.error(ServerException(message: 'Check your internet connection'));
   }

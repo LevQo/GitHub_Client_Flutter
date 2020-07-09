@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client_flutter/core/errors/exceptions.dart';
-import 'package:github_client_flutter/features/user_details/data/data_sources/user_details_data_source.dart';
-import 'package:github_client_flutter/features/user_details/data/models/user_details_model.dart';
+import 'package:github_client_flutter/features/repository_details/data/data_sources/repository_details_data_source.dart';
+import 'package:github_client_flutter/features/repository_details/data/models/repository_details_model.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
@@ -10,7 +10,7 @@ import '../../../../fixtures/fixture_reader.dart';
 class MockDioAdapter extends Mock implements HttpClientAdapter {}
 
 void main() {
-  UserDetailsDataSource dataSource;
+  RepositoryDetailsDataSource dataSource;
   MockDioAdapter mockDioAdapter;
 
   final tDio = Dio()..options.baseUrl = 'https://api.github.com';
@@ -18,18 +18,17 @@ void main() {
   setUp(() {
     mockDioAdapter = MockDioAdapter();
     tDio.httpClientAdapter = mockDioAdapter;
-    dataSource = UserDetailsDataSourceImpl(client: tDio);
+    dataSource = RepositoryDetailsDataSourceImpl(client: tDio);
   });
 
-  final tUserDetails = UserDetailsModel(
-      login: 'octocat',
-      name: 'monalisa octocat',
-      avatarUrl: 'https://github.com/images/error/octocat_happy.gif',
-      followers: 20,
-      following: 0,
-      bio: 'There once was...',
-      company: 'GitHub',
-      location: 'San Francisco');
+  final tRepositoryDetails = RepositoryDetailsModel(
+      fullName: 'octocat/Hello-World',
+      description: 'This your first repo!',
+      watchersCount: 80,
+      stargazersCount: 80,
+      forksCount: 9,
+      ownerLogin: 'octocat',
+      avatarUrl: 'https://github.com/images/error/octocat_happy.gif');
 
   void setUpMockDioClientSuccess200() {
     final responseBody = ResponseBody.fromString(fixture('user_details.json'), 200, headers: {
@@ -47,23 +46,23 @@ void main() {
     when(mockDioAdapter.fetch(any, any, any)).thenAnswer((_) async => responseBody);
   }
 
-  group('get user details', () {
-    test('should return [UserDetailsModel] when the response code is 200', () async {
+  group('get repository details', () {
+    test('should return [RepositoryDetailsModel] when the response code is 200', () async {
       // arrange
       setUpMockDioClientSuccess200();
       // act
-      final result = await dataSource.getUserDetails('');
+      final result = await dataSource.getRepositoryDetails('', '');
       // assert
-      expect(result, equals(tUserDetails));
+      expect(result, equals(tRepositoryDetails));
     });
 
     test('should throw [ServerException] when the response code is 500 or other', () async {
       // arrange
       setUpMockDioClientFailure500();
       // act
-      final call = dataSource.getUserDetails;
+      final call = dataSource.getRepositoryDetails;
       // assert
-      expect(() => call(''), throwsA(isInstanceOf<ServerException>()));
+      expect(() => call('', ''), throwsA(isInstanceOf<ServerException>()));
     });
   });
 }
