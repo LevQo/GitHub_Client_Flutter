@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:github_client_flutter/core/di/injection_container.dart';
 import 'package:github_client_flutter/core/utils/extentions.dart';
 import 'package:github_client_flutter/core/widgets/error_container.dart';
 import 'package:github_client_flutter/features/user_details/domain/entities/user_details_entity.dart';

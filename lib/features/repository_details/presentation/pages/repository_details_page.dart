@@ -10,6 +10,7 @@ import 'package:github_client_flutter/features/repository_details/presentation/b
 import 'package:github_client_flutter/features/repository_details/presentation/widgets/repository_info_card.dart';
 import 'package:github_client_flutter/core/utils/extentions.dart';
 import 'package:github_client_flutter/features/repository_details/presentation/widgets/user_card.dart';
+import 'package:github_client_flutter/features/user_details/domain/use_cases/get_user_details_use_case.dart';
 
 class RepositoryDetailsPage extends StatelessWidget {
   final String owner;
@@ -126,7 +127,7 @@ class RepositoryDetailsPage extends StatelessWidget {
               GestureDetector(
                 onTap: () => ExtendedNavigator.of(context).pushNamed(
                   Routes.userDetailsPage,
-                  arguments: UserDetailsPageArguments(username: details.ownerLogin),
+                  arguments: UserDetailsPageArguments(username: details.ownerLogin, useCase: sl<GetUserDetailsUseCase>()),
                 ),
                 child: UserCard(avatarUrl: details.avatarUrl, login: details.ownerLogin),
               )

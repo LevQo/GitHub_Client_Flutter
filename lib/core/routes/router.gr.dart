@@ -10,6 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:github_client_flutter/features/public_repositories/presentation/pages/all_public_repositories_page.dart';
 import 'package:github_client_flutter/features/repository_details/presentation/pages/repository_details_page.dart';
 import 'package:github_client_flutter/features/user_details/presentation/pages/user_details_page.dart';
+import 'package:github_client_flutter/features/user_details/domain/use_cases/get_user_details_use_case.dart';
 
 abstract class Routes {
   static const repositoriesPage = '/';
@@ -51,13 +52,13 @@ class Router extends RouterBase {
           settings: settings,
         );
       case Routes.userDetailsPage:
-        if (hasInvalidArgs<UserDetailsPageArguments>(args)) {
+        if (hasInvalidArgs<UserDetailsPageArguments>(args, isRequired: true)) {
           return misTypedArgsRoute<UserDetailsPageArguments>(args);
         }
-        final typedArgs =
-            args as UserDetailsPageArguments ?? UserDetailsPageArguments();
+        final typedArgs = args as UserDetailsPageArguments;
         return MaterialPageRoute<dynamic>(
-          builder: (context) => UserDetailsPage(username: typedArgs.username),
+          builder: (context) => UserDetailsPage(
+              username: typedArgs.username, useCase: typedArgs.useCase),
           settings: settings,
         );
       default:
@@ -80,5 +81,6 @@ class RepositoryDetailsPageArguments {
 //UserDetailsPage arguments holder class
 class UserDetailsPageArguments {
   final String username;
-  UserDetailsPageArguments({this.username});
+  final GetUserDetailsUseCase useCase;
+  UserDetailsPageArguments({@required this.username, @required this.useCase});
 }
