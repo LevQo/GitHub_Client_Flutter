@@ -9,14 +9,13 @@ import 'package:github_client_flutter/features/user_details/presentation/blocs/b
 
 class UserDetailsPage extends StatelessWidget {
   final String username;
-  final GetUserDetailsUseCase useCase;
 
-  const UserDetailsPage({@required this.username, @required this.useCase});
+  const UserDetailsPage({@required this.username});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<UserDetailsBloc>(
-      create: (context) => UserDetailsBloc(getUserDetails: useCase)
+      create: (context) => UserDetailsBloc(getUserDetails: sl<GetUserDetailsUseCase>())
         ..add(UserDetailsEvent.getDetails(username: username)),
       child: BlocBuilder<UserDetailsBloc, UserDetailsState>(
         builder: (context, state) {

@@ -127,7 +127,7 @@ class RepositoryDetailsPage extends StatelessWidget {
               GestureDetector(
                 onTap: () => ExtendedNavigator.of(context).pushNamed(
                   Routes.userDetailsPage,
-                  arguments: UserDetailsPageArguments(username: details.ownerLogin, useCase: sl<GetUserDetailsUseCase>()),
+                  arguments: UserDetailsPageArguments(username: details.ownerLogin),
                 ),
                 child: UserCard(avatarUrl: details.avatarUrl, login: details.ownerLogin),
               )
